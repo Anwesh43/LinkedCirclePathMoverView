@@ -95,4 +95,45 @@ class CirclePathMoverView(ctx : Context) : View(ctx) {
             }
         }
     }
-}
+
+    data class CirclePathNode(var i : Int, val state : State = State()) {
+
+        private var next : CirclePathNode? = null
+        private var prev : CirclePathNode? = null
+
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = CirclePathNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawCirclePathNode(i, state.scale, paint)
+            next?.draw(canvas, paint)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            state.update {
+                cb(i, it)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : CirclePathNode {
+            var curr : CirclePathNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            cb()
+            return this
+        }
+    }
+ }
