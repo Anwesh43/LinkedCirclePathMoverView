@@ -4,6 +4,7 @@ package com.anwesh.uiprojects.circlepathmoverview
  * Created by anweshmishra on 15/08/18.
  */
 
+import android.app.Activity
 import android.view.View
 import android.view.MotionEvent
 import android.graphics.Paint
@@ -181,6 +182,15 @@ class CirclePathMoverView(ctx : Context) : View(ctx) {
             lcp.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+
+        fun create(activity : Activity) : CirclePathMoverView {
+            val view : CirclePathMoverView = CirclePathMoverView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
  }
