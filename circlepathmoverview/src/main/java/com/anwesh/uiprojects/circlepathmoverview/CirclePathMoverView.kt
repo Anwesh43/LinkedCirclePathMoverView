@@ -18,17 +18,19 @@ val nodes : Int = 5
 fun Canvas.drawCirclePathNode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
+    val sw : Float = Math.min(w, h) / 60
     val gap : Float = w / nodes
-    val r : Float = gap / (2 * Math. PI).toFloat()
+    val r : Float = (gap - sw) / (2 * Math. PI.toFloat() + 1)
     val sc1 : Float = Math.min(0.5f, scale) * 2
     val sc2 : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f)) * 2
+    paint.style = Paint.Style.STROKE
     paint.strokeCap = Paint.Cap.ROUND
     paint.strokeWidth = Math.min(w, h) / 60
     paint.color = Color.parseColor("#4CAF50")
     save()
     translate(gap * i + gap / 2, h / 2)
     drawArc(RectF(-r, -r, r, r), 360f * sc1, 360f * (1 - sc1), false, paint)
-    drawLine(r + gap * sc2, 0f, r + gap * sc1, 0f, paint)
+    drawLine(r + (gap - r - sw) * sc2, 0f, r + (gap - r - sw) * sc1, 0f, paint)
     restore()
 }
 
@@ -135,6 +137,9 @@ class CirclePathMoverView(ctx : Context) : View(ctx) {
             if (dir == 1) {
                 curr = next
             }
+            if (curr != null) {
+                return curr
+            }
             cb()
             return this
         }
@@ -174,6 +179,7 @@ class CirclePathMoverView(ctx : Context) : View(ctx) {
             animator.animate {
                 lcp.update {i, scl ->
                     animator.stop()
+                    render(canvas, paint)
                 }
             }
         }
