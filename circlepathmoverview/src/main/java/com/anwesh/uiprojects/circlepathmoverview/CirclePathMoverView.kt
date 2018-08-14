@@ -159,4 +159,26 @@ class CirclePathMoverView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : CirclePathMoverView) {
+
+        private val animator : Animator = Animator(view)
+        private val lcp : LinkedCirclePath = LinkedCirclePath(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            lcp.draw(canvas, paint)
+            animator.animate {
+                lcp.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            lcp.startUpdating {
+                animator.start()
+            }
+        }
+    }
  }
