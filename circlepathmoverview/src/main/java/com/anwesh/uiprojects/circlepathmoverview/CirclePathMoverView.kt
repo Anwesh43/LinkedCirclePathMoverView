@@ -32,6 +32,13 @@ fun Canvas.drawCirclePathNode(i : Int, scale : Float, paint : Paint) {
     drawArc(RectF(-r, -r, r, r), 360f * sc1, 360f * (1 - sc1), false, paint)
     drawLine(r + (gap - r - sw) * sc2, 0f, r + (gap - r - sw) * sc1, 0f, paint)
     restore()
+    paint.style = Paint.Style.FILL
+    save()
+    val arcR : Float = Math.min(w, h) / 5
+    val deg : Float = 360f / nodes
+    translate(w/2, 3 * h / 5)
+    drawArc(RectF(-arcR, h/3 - arcR, arcR, h/3 + arcR), deg * i + deg * (sc1 + sc2), deg * (1 - (sc1 + sc2)), true, paint)
+    restore()
 }
 
 class CirclePathMoverView(ctx : Context) : View(ctx) {
