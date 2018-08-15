@@ -47,6 +47,8 @@ class CirclePathMoverView(ctx : Context) : View(ctx) {
 
     private val renderer : Renderer = Renderer(this)
 
+    var animationCompletionListener : AnimationCompleteListener? = null
+
     override fun onDraw(canvas : Canvas) {
         renderer.render(canvas, paint)
     }
@@ -58,6 +60,10 @@ class CirclePathMoverView(ctx : Context) : View(ctx) {
             }
         }
         return true
+    }
+
+    fun addAnimationCompletionListener(onComplete : (Int) -> Unit, onReset : (Int) -> Unit) {
+        animationCompletionListener = AnimationCompleteListener(onComplete, onReset)
     }
 
     data class State(var scale : Float = 0f, var dir : Float = 0f, var prevScale : Float = 0f) {
@@ -187,6 +193,10 @@ class CirclePathMoverView(ctx : Context) : View(ctx) {
                 lcp.update {i, scl ->
                     animator.stop()
                     render(canvas, paint)
+                    when(scl) {
+                        1f -> view.animationCompletionListener?.onComplete?.invoke(i)
+                        0f -> view.animationCompletionListener?.onReset?.invoke(i)
+                    }
                 }
             }
         }
@@ -206,4 +216,6 @@ class CirclePathMoverView(ctx : Context) : View(ctx) {
             return view
         }
     }
+
+    data class AnimationCompleteListener(var onComplete : (Int) -> Unit, var onReset : (Int) -> Unit)
  }
