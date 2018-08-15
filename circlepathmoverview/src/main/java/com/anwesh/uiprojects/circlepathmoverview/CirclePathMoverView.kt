@@ -36,8 +36,8 @@ fun Canvas.drawCirclePathNode(i : Int, scale : Float, paint : Paint) {
     save()
     val arcR : Float = Math.min(w, h) / 5
     val deg : Float = 360f / nodes
-    translate(w/2, 3 * h / 5)
-    drawArc(RectF(-arcR, h/3 - arcR, arcR, h/3 + arcR), deg * i + deg * (sc1 + sc2), deg * (1 - (sc1 + sc2)), true, paint)
+    translate(w/2, 0.7f * h)
+    drawArc(RectF(-arcR, - arcR, arcR, arcR), deg * i + deg * (sc1 + sc2), deg * (1 - (sc1 + sc2)), true, paint)
     restore()
 }
 
